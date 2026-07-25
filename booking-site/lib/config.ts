@@ -1,0 +1,66 @@
+/**
+ * Single source of truth for business details.
+ * Change these here and they update everywhere: page copy, emails, SMS.
+ */
+
+export const business = {
+  name: "CMB Transformations",
+  trainerName: "Charles",
+  timezone: "America/Chicago",
+
+  // TODO: replace with your real details before launch
+  phone: "(555) 123-4567",
+  phoneE164: "+15551234567",
+  email: "hello@cmbtransformations.com",
+
+  location: {
+    name: "Your Gym Name",
+    address: "123 Main St",
+    cityState: "Chicago, IL 60601",
+    mapsUrl: "https://maps.google.com/?q=123+Main+St+Chicago+IL",
+  },
+
+  session: {
+    lengthMinutes: 60,
+    label: "60-minute session",
+    price: "Free",
+  },
+
+  social: {
+    instagram: "https://instagram.com/cmbtransformations",
+  },
+} as const;
+
+export const sessionIncludes = [
+  {
+    title: "We get to know each other",
+    body: "We'll spend time talking about your goals, what's held you back in the past, and what success actually looks like for you. No judgment. Just an honest conversation.",
+  },
+  {
+    title: "We train",
+    body: "This isn't a consultation where we just sit and talk. You'll get a real workout so I can see how you move, coach you through exercises, and give you immediate feedback.",
+  },
+  {
+    title: "We build your roadmap",
+    body: "At the end of the session, I'll explain exactly what I think you should focus on first and how I'd approach your training. Even if you decide not to continue, you'll leave with direction instead of more confusion.",
+  },
+] as const;
+
+export const faqs = [
+  {
+    q: "Is it actually free?",
+    a: "Yes. No card, no deposit, no catch. I'd rather you feel how I coach before you decide to pay for it.",
+  },
+  {
+    q: "What if I've never worked out before?",
+    a: "That's most people who book this. We start where you are. Nothing about the session assumes experience.",
+  },
+  {
+    q: "What should I bring?",
+    a: "Comfortable clothes, athletic shoes, and water. That's it.",
+  },
+  {
+    q: "What if I need to reschedule?",
+    a: "Every confirmation email and text has a cancel link. Use it any time — no awkward conversation required.",
+  },
+] as const;
