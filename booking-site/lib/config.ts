@@ -8,9 +8,10 @@ export const business = {
   trainerName: "Charles",
   timezone: "America/Chicago",
 
+  phone: "(404) 247-5627",
+  phoneE164: "+14042475627",
+
   // TODO: replace with your real details before launch
-  phone: "(555) 123-4567",
-  phoneE164: "+15551234567",
   email: "hello@cmbtransformations.com",
 
   location: {
@@ -30,6 +31,32 @@ export const business = {
     instagram: "https://instagram.com/cmbtransformations",
   },
 } as const;
+
+/**
+ * Booking rules. These are the knobs you'll actually want to turn.
+ */
+export const booking = {
+  /** Nothing bookable inside this many hours. Your travel + prep buffer. */
+  minNoticeHours: 4,
+  /** How far out the picker lets people book. */
+  maxDaysAhead: 14,
+  /** Gap left after each session before the next one can start. */
+  bufferMinutes: 0,
+} as const;
+
+export const goalOptions = [
+  "Lose fat",
+  "Build muscle",
+  "Get stronger",
+  "General health",
+  "Sport-specific",
+] as const;
+
+export const experienceOptions = [
+  "Never trained before",
+  "Some experience",
+  "Experienced",
+] as const;
 
 export const sessionIncludes = [
   {

@@ -2,7 +2,7 @@ import FacetBackdrop from "@/components/FacetBackdrop";
 import Hero from "@/components/Hero";
 import WhyFree from "@/components/WhyFree";
 import Includes from "@/components/Includes";
-import BookingPlaceholder from "@/components/BookingPlaceholder";
+import BookingSection from "@/components/BookingSection";
 import About from "@/components/About";
 import Faq from "@/components/Faq";
 import Footer from "@/components/Footer";
@@ -16,7 +16,7 @@ export default function Home() {
         <Hero />
         <WhyFree />
         <Includes />
-        <BookingPlaceholder />
+        <BookingSection />
         <About />
         <Faq />
         <Footer />
