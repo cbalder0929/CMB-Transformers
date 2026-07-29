@@ -1,6 +1,6 @@
-# CMB Transformations
+# CMB Bookings
 
-Booking system for CMB Transformations, a personal training business. Prospects
+Booking system for CMB Bookings, a personal training business. Prospects
 land on a mobile-first page, see the offer, and book a free session — which
 (per the build plan) will eventually write to Google Calendar and send email/SMS
 confirmations and reminders automatically.

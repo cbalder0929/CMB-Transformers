@@ -1,17 +1,25 @@
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
-import type { AvailabilityRule } from "./supabase";
 
 /**
  * Slot generation. Deliberately pure — no database, no network, no `new Date()`
  * hiding inside. Everything it needs is an argument, which is what makes the
  * DST and timezone tests in lib/__tests__ possible.
  *
- * THE RULE: availability_rules store WALL CLOCK time in the business timezone
+ * THE RULE: weekly rules store WALL CLOCK time in the business timezone
  * ("6am Monday"). Everything downstream is a UTC instant. The conversion
  * happens here, once, and nowhere else.
  */
 
 export type Interval = { start: Date; end: Date };
+
+/** A recurring business-hours window, maintained in lib/config.ts. */
+export type AvailabilityRule = {
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+  slot_minutes: number;
+  active: boolean;
+};
 
 export type Slot = {
   /** UTC ISO instant — this is what gets stored and posted back. */

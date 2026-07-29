@@ -1,4 +1,4 @@
-# CMB Transformations — Booking Site
+# CMB Bookings — Booking Site
 
 Mobile-first booking page for free personal training sessions.
 

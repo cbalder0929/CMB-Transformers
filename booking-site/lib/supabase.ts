@@ -31,22 +31,6 @@ export function getServiceClient(): SupabaseClient {
 // to remember. Keep in sync with supabase/schema.sql.
 // ---------------------------------------------------------------------------
 
-export type AvailabilityRule = {
-  id: string;
-  day_of_week: number; // 0 = Sunday
-  start_time: string; // "06:00:00"
-  end_time: string; // "09:00:00"
-  slot_minutes: number;
-  active: boolean;
-};
-
-export type BlackoutDate = {
-  id: string;
-  starts_at: string;
-  ends_at: string;
-  reason: string | null;
-};
-
 export type BookingStatus =
   | "booked"
   | "confirmed"

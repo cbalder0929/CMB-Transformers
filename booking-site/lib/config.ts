@@ -4,7 +4,7 @@
  */
 
 export const business = {
-  name: "CMB Transformations",
+  name: "CMB Bookings",
   trainerName: "Charles",
   timezone: "America/Chicago",
 
@@ -12,7 +12,7 @@ export const business = {
   phoneE164: "+14042475627",
 
   // TODO: replace with your real details before launch
-  email: "hello@cmbtransformations.com",
+  email: "hello@cmbbookings.com",
 
   location: {
     name: "Your Gym Name",
@@ -28,7 +28,7 @@ export const business = {
   },
 
   social: {
-    instagram: "https://instagram.com/cmbtransformations",
+    instagram: "https://instagram.com/cmbbookings",
   },
 } as const;
 
@@ -43,6 +43,20 @@ export const booking = {
   /** Gap left after each session before the next one can start. */
   bufferMinutes: 0,
 } as const;
+
+/**
+ * Public booking windows in America/Chicago. Google Calendar removes any
+ * window that conflicts with school, work, personal, or client events.
+ */
+export const availabilityRules = [
+  { day_of_week: 0, start_time: "07:00:00", end_time: "18:00:00", slot_minutes: 60, active: true },
+  { day_of_week: 1, start_time: "07:00:00", end_time: "21:00:00", slot_minutes: 60, active: true },
+  { day_of_week: 2, start_time: "07:00:00", end_time: "21:00:00", slot_minutes: 60, active: true },
+  { day_of_week: 3, start_time: "07:00:00", end_time: "21:00:00", slot_minutes: 60, active: true },
+  { day_of_week: 4, start_time: "07:00:00", end_time: "21:00:00", slot_minutes: 60, active: true },
+  { day_of_week: 5, start_time: "07:00:00", end_time: "18:00:00", slot_minutes: 60, active: true },
+  { day_of_week: 6, start_time: "07:00:00", end_time: "18:00:00", slot_minutes: 60, active: true },
+] as const;
 
 export const goalOptions = [
   "Lose fat",

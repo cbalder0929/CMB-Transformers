@@ -1,5 +1,5 @@
 -- ============================================================================
--- CMB Transformations — booking database
+-- CMB Bookings — booking database
 -- Paste this whole file into the Supabase SQL Editor and hit Run.
 -- Safe to re-run: everything is IF NOT EXISTS / idempotent.
 -- ============================================================================
@@ -7,33 +7,7 @@
 create extension if not exists pgcrypto;
 
 -- ---------------------------------------------------------------------------
--- 1. Your bookable windows. You control these; the site reads them.
---    day_of_week: 0 = Sunday ... 6 = Saturday
---    Times are WALL CLOCK time in your business timezone (America/Chicago).
--- ---------------------------------------------------------------------------
-create table if not exists availability_rules (
-  id            uuid primary key default gen_random_uuid(),
-  day_of_week   int  not null check (day_of_week between 0 and 6),
-  start_time    time not null,
-  end_time      time not null,
-  slot_minutes  int  not null default 60,
-  active        boolean not null default true,
-  check (end_time > start_time)
-);
-
--- ---------------------------------------------------------------------------
--- 2. One-off blocks: vacation, a busy Saturday, etc.
--- ---------------------------------------------------------------------------
-create table if not exists blackout_dates (
-  id        uuid primary key default gen_random_uuid(),
-  starts_at timestamptz not null,
-  ends_at   timestamptz not null,
-  reason    text,
-  check (ends_at > starts_at)
-);
-
--- ---------------------------------------------------------------------------
--- 3. The core table.
+-- 1. The core table.
 -- ---------------------------------------------------------------------------
 create table if not exists bookings (
   id                    uuid primary key default gen_random_uuid(),
@@ -109,31 +83,7 @@ create table if not exists message_log (
 -- ============================================================================
 
 alter table bookings          enable row level security;
-alter table availability_rules enable row level security;
-alter table blackout_dates    enable row level security;
 alter table message_log       enable row level security;
-
--- ============================================================================
--- SEED: your training hours. EDIT THESE to match reality, then re-run just
--- this block. Times are Central wall-clock.
---   0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
--- ============================================================================
-
--- Only seeds if the table is empty, so re-running the file won't duplicate.
-insert into availability_rules (day_of_week, start_time, end_time, slot_minutes)
-select * from (values
-  (1, '06:00'::time, '09:00'::time, 60),   -- Mon morning
-  (1, '16:00'::time, '19:00'::time, 60),   -- Mon evening
-  (2, '06:00'::time, '09:00'::time, 60),   -- Tue morning
-  (2, '16:00'::time, '19:00'::time, 60),
-  (3, '06:00'::time, '09:00'::time, 60),   -- Wed
-  (3, '16:00'::time, '19:00'::time, 60),
-  (4, '06:00'::time, '09:00'::time, 60),   -- Thu
-  (4, '16:00'::time, '19:00'::time, 60),
-  (5, '06:00'::time, '09:00'::time, 60),   -- Fri
-  (6, '08:00'::time, '12:00'::time, 60)    -- Sat morning
-) as seed(day_of_week, start_time, end_time, slot_minutes)
-where not exists (select 1 from availability_rules);
 
 -- ============================================================================
 -- HANDY QUERIES (run these later, from the SQL editor)
@@ -143,9 +93,3 @@ where not exists (select 1 from availability_rules);
 --   select first_name, last_name, phone, starts_at at time zone 'America/Chicago' as local_time, status
 --   from bookings where starts_at > now() order by starts_at;
 --
--- Block off a vacation:
---   insert into blackout_dates (starts_at, ends_at, reason)
---   values ('2026-08-10 00:00-05', '2026-08-17 00:00-05', 'vacation');
---
--- Turn off Saturdays for a while:
---   update availability_rules set active = false where day_of_week = 6;

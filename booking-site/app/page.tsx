@@ -14,11 +14,11 @@ export default function Home() {
       <FacetBackdrop />
       <main className="relative min-h-screen">
         <Hero />
-        <WhyFree />
-        <Includes />
         <BookingSection />
         <About />
         <Faq />
+        <WhyFree />
+        <Includes />
         <Footer />
       </main>
       <StickyCta />

@@ -1,4 +1,4 @@
-# CMB Transformations — Free Session Booking System
+# CMB Bookings — Free Session Booking System
 ## Full Architecture & Build Plan
 
 **Goal:** A mobile-first page where prospects book a free personal training session. It writes to your Google Calendar, sends confirmation emails and SMS reminders, and asks people to confirm before the session so you don't waste your time on no-shows.
@@ -189,7 +189,7 @@ GOOGLE_CALENDAR_ID=               # usually your gmail address
 
 # Resend
 RESEND_API_KEY=
-FROM_EMAIL=hello@cmbtransformations.com
+FROM_EMAIL=hello@cmbbookings.com
 
 # Twilio
 TWILIO_ACCOUNT_SID=
@@ -197,7 +197,7 @@ TWILIO_AUTH_TOKEN=
 TWILIO_PHONE_NUMBER=+1...
 
 # App
-NEXT_PUBLIC_SITE_URL=https://cmbtransformations.com
+NEXT_PUBLIC_SITE_URL=https://cmbbookings.com
 CRON_SECRET=                      # random string; guards cron endpoints
 BUSINESS_TIMEZONE=America/Chicago
 TRAINER_NAME=Charles
@@ -317,7 +317,7 @@ US carriers block unregistered A2P traffic. This is not optional and it's the st
 
 **Required on the booking form**, next to an *unchecked* checkbox:
 
-> ☐ I agree to receive appointment reminders and confirmations by text message from CMB Transformations at the number provided. Message frequency varies. Message and data rates may apply. Reply STOP to opt out, HELP for help. See our [Privacy Policy](/privacy) and [Terms](/terms).
+> ☐ I agree to receive appointment reminders and confirmations by text message from CMB Bookings at the number provided. Message frequency varies. Message and data rates may apply. Reply STOP to opt out, HELP for help. See our [Privacy Policy](/privacy) and [Terms](/terms).
 
 **Required elsewhere:**
 
@@ -333,13 +333,13 @@ Store `consent_ip` and `consent_at` on every booking. If a complaint ever lands,
 ## 9. Message Templates
 
 **Confirmation SMS** (immediately on booking)
-> CMB Transformations: You're booked! Free session {day}, {date} at {time} with Charles. Location: {address}. Reply C to cancel. Reply STOP to opt out.
+> CMB Bookings: You're booked! Free session {day}, {date} at {time} with Charles. Location: {address}. Reply C to cancel. Reply STOP to opt out.
 
 **24-hour confirm request**
-> CMB Transformations: Hey {first_name} — still on for your free session tomorrow at {time}? Reply Y to confirm or C to cancel. Reply STOP to opt out.
+> CMB Bookings: Hey {first_name} — still on for your free session tomorrow at {time}? Reply Y to confirm or C to cancel. Reply STOP to opt out.
 
 **2-hour reminder**
-> CMB Transformations: See you in 2 hours at {time}, {address}. Bring water and comfortable shoes. — Charles
+> CMB Bookings: See you in 2 hours at {time}, {address}. Bring water and comfortable shoes. — Charles
 
 **Confirmation email** — sender name, session details, .ics attachment, what to bring, what to expect, address with a map link, your phone number, big Confirm and Cancel buttons.
 

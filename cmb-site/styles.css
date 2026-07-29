@@ -1,0 +1,826 @@
+/* ==========================================================================
+   CMB Bookings — design system
+   Palette sampled from the low-poly gradient artwork: warm (bottom-left)
+   → magenta → deep indigo → blue → cyan (top-right). Every accent below is
+   a real pixel from that image, which is why the UI never fights the art.
+   No build step, no framework. Edit this file directly.
+   ========================================================================== */
+
+:root {
+  /* Facet colors */
+  --amber: #eda149;
+  --flame: #f56a29;
+  --ember: #d83627;
+  --rose:  #a41b47;
+  --plum:  #6e2576;
+  --azure: #6098d3;
+  --cyan:  #56d3d7;
+  --aqua:  #7af0e4;
+
+  /* Deep indigo base, extended down from the artwork's darkest corner */
+  --night-950: #07041a;
+  --night-900: #0b0726;
+  --night-800: #120c38;
+  --night-700: #1b1250;
+  --night-600: #27106b;
+  --night-500: #3a2490;
+
+  --facet-warm: linear-gradient(135deg, #eda149 0%, #f56a29 45%, #d83627 100%);
+  --facet-cool: linear-gradient(135deg, #56d3d7 0%, #6098d3 55%, #3a2490 100%);
+  --facet-full: linear-gradient(120deg, #eda149 0%, #f56a29 18%, #d83627 34%,
+    #a41b47 50%, #6e2576 66%, #27106b 80%, #6098d3 92%, #7af0e4 100%);
+
+  --shadow-glow: 0 20px 60px -18px rgba(245, 106, 41, 0.55);
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--night-950);
+  color: #fff;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* 16px minimum on inputs — anything smaller triggers iOS auto-zoom */
+input, select, textarea { font-size: 16px; }
+
+::selection { background: var(--flame); color: #fff; }
+
+a { color: inherit; text-decoration: none; }
+
+img, svg, iframe { display: block; max-width: 100%; }
+
+h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.03em; }
+
+:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+
+.wrap {
+  margin-inline: auto;
+  max-width: 32rem;      /* mobile-first: the whole site is a 512px column */
+  width: 100%;
+}
+
+.wrap-wide { max-width: 42rem; }
+
+section { position: relative; padding: 4rem 1.25rem; }
+
+@media (min-width: 640px) {
+  section { padding-inline: 2rem; }
+}
+
+main { position: relative; min-height: 100vh; }
+
+/* --------------------------------------------------------------------------
+   Backdrop — the artwork, fixed behind everything, slowly drifting, then
+   faded into deep indigo so the lower sections stay readable.
+   -------------------------------------------------------------------------- */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+}
+
+.backdrop img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transform-origin: center;
+  animation: drift 24s ease-in-out infinite;
+}
+
+/* Legibility scrim — darkens the field just enough for white text */
+.backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 4, 26, 0.35);
+}
+
+/* Fades the artwork out below the first screen so content sections sit on
+   solid indigo instead of competing color */
+.backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(7, 4, 26, 0.7), var(--night-950));
+}
+
+/* --------------------------------------------------------------------------
+   Panels — the structural unit of the whole page
+   -------------------------------------------------------------------------- */
+
+.glass {
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+    0 24px 50px -28px rgba(0, 0, 0, 0.85);
+}
+
+.glass-dark {
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(11, 7, 38, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.07);
+}
+
+/* --------------------------------------------------------------------------
+   Type helpers
+   -------------------------------------------------------------------------- */
+
+/* Gradient text that reads as one continuous facet */
+.text-facet {
+  background: var(--facet-warm);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.muted   { color: rgba(255, 255, 255, 0.6); }
+.muted-2 { color: rgba(255, 255, 255, 0.5); }
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-label::before {
+  content: "";
+  height: 1px;
+  width: 1.5rem;
+  background: linear-gradient(to right, var(--flame), var(--rose));
+}
+
+.section-label span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.section-h2 {
+  margin-top: 0.75rem;
+  font-size: 1.875rem;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+}
+
+@media (min-width: 640px) {
+  .section-h2 { font-size: 2.25rem; }
+}
+
+/* Thin gradient hairline used to separate sections */
+.rule-facet {
+  height: 1px;
+  background: linear-gradient(90deg, transparent,
+    rgba(245, 106, 41, 0.5), rgba(164, 27, 71, 0.5),
+    rgba(96, 152, 211, 0.5), transparent);
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.btn-primary,
+.btn-glass {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;          /* tap target */
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+  cursor: pointer;
+  border: 0;
+  font-family: inherit;
+  transition: transform 0.2s ease;
+}
+
+.btn-primary {
+  position: relative;
+  background: var(--facet-warm);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-glass {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.btn-primary:active,
+.btn-glass:active { transform: scale(0.98); }
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+.hero { padding-top: 2rem; padding-bottom: 4rem; }
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.wordmark span {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.pill {
+  margin-top: 3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.375rem 0.875rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dot {
+  position: relative;
+  display: flex;
+  height: 0.5rem;
+  width: 0.5rem;
+}
+
+.dot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--aqua);
+  opacity: 0.75;
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.dot::after {
+  content: "";
+  position: relative;
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 999px;
+  background: var(--aqua);
+}
+
+.hero h1 {
+  margin-top: 1.5rem;
+  font-size: 3rem;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  filter: drop-shadow(0 2px 20px rgba(0, 0, 0, 0.35));
+}
+
+.hero h1 em { font-style: italic; }
+
+.hero p {
+  margin-top: 1.5rem;
+  max-width: 28rem;
+  font-size: 1.125rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.8);
+  filter: drop-shadow(0 1px 12px rgba(0, 0, 0, 0.4));
+}
+
+.hero p + p { margin-top: 0.75rem; }
+
+.hero-cta { margin-top: 2.25rem; }
+
+.hero-cta .note {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  filter: none;
+}
+
+@media (min-width: 640px) {
+  .hero h1 { font-size: 4.25rem; }
+  .hero-cta .btn-primary {
+    display: inline-flex;
+    padding-inline: 3rem;
+  }
+}
+
+/* Stat strip — structure, and it earns trust before the ask */
+.stats {
+  margin-top: 3.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.stats > div {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 1rem 0.75rem;
+  text-align: center;
+}
+
+.stats dt { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+
+.stats dd {
+  margin: 0.125rem 0 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   Booking — the Google Calendar scheduler lives in a deliberate light card.
+   Google renders its scheduler white and gives us no theme control, so we
+   frame it as an intentional panel instead of pretending otherwise.
+   -------------------------------------------------------------------------- */
+
+#book { scroll-margin-top: 1rem; }
+
+/* Warm bloom behind the booking panel */
+.book-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  height: 460px;
+  width: 460px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: rgba(245, 106, 41, 0.25);
+  filter: blur(130px);
+  pointer-events: none;
+}
+
+.booking-panel { margin-top: 2rem; padding: 0.875rem; }
+
+.scheduler-card {
+  border-radius: 1.125rem;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 40px -12px rgba(0, 0, 0, 0.6);
+}
+
+.scheduler-card iframe {
+  width: 100%;
+  height: 760px;
+  border: 0;
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .scheduler-card iframe { height: 640px; }
+}
+
+.booking-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin-top: 0.875rem;
+  padding-inline: 0.25rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.booking-meta .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.booking-meta .chip::before {
+  content: "";
+  height: 0.375rem;
+  width: 0.375rem;
+  border-radius: 999px;
+  background: var(--flame);
+}
+
+.booking-note {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Shown only if the iframe is blocked (privacy extensions, strict Safari) */
+.scheduler-fallback {
+  display: none;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 1.125rem;
+}
+
+.scheduler-fallback p { color: rgba(255, 255, 255, 0.6); font-size: 0.9375rem; }
+.scheduler-fallback .btn-primary { margin-top: 1.25rem; }
+
+.is-blocked .scheduler-card { display: none; }
+.is-blocked .scheduler-fallback { display: block; }
+
+/* Google's own scheduling button. It has to exist and be laid out for us to
+   click it, but it must never be seen — our buttons stand in for it.
+   Offscreen rather than display:none, which would make the click a no-op. */
+#gcalHost {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   About
+   -------------------------------------------------------------------------- */
+
+.about-card { margin-top: 1.75rem; overflow: hidden; }
+
+.about-photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.about-photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--facet-full);
+  opacity: 0.25;
+}
+
+.about-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 7, 38, 0.4);
+}
+
+.about-photo span {
+  position: relative;
+  font-size: 0.875rem;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.about-body { padding: 1.5rem; }
+.about-body h3 { font-size: 1.5rem; }
+.about-body .role {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--amber);
+}
+.about-body p {
+  margin-top: 1rem;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.philosophy { margin-top: 1rem; padding: 1.5rem; }
+.philosophy h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.6);
+}
+.philosophy p {
+  margin-top: 0.75rem;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   FAQ
+   -------------------------------------------------------------------------- */
+
+.faq { margin-top: 1.75rem; overflow: hidden; }
+.faq details + details { border-top: 1px solid rgba(255, 255, 255, 0.08); }
+
+.faq summary {
+  min-height: 44px;
+  display: flex;
+  cursor: pointer;
+  list-style: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.faq summary::-webkit-details-marker { display: none; }
+
+.faq summary .plus {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--flame);
+  transition: transform 0.2s ease;
+}
+
+.faq details[open] summary .plus { transform: rotate(45deg); }
+
+.faq p {
+  padding: 0 1.25rem 1.25rem;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   Why free
+   -------------------------------------------------------------------------- */
+
+.prose-card { margin-top: 1.75rem; padding: 1.5rem; }
+
+.prose-card p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.check-list {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.check-list li::before {
+  content: "";
+  margin-top: 0.5rem;
+  height: 0.375rem;
+  width: 0.375rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--flame);
+}
+
+.prose-card .after { margin-top: 1.25rem; }
+
+/* --------------------------------------------------------------------------
+   Includes — three numbered steps, each a facet color walking the artwork
+   -------------------------------------------------------------------------- */
+
+.steps {
+  margin: 2.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.steps li { padding: 1.25rem; }
+
+.steps .row { display: flex; align-items: flex-start; gap: 1rem; }
+
+.steps .num {
+  margin-top: 0.125rem;
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.steps li:nth-child(1) .num { background: linear-gradient(to bottom right, var(--amber), var(--flame)); }
+.steps li:nth-child(2) .num { background: linear-gradient(to bottom right, var(--flame), var(--ember)); }
+.steps li:nth-child(3) .num { background: linear-gradient(to bottom right, var(--rose), var(--plum)); }
+.steps li:nth-child(4) .num { background: linear-gradient(to bottom right, var(--azure), var(--cyan)); }
+
+.steps h3 { font-size: 1rem; font-weight: 600; letter-spacing: -0.02em; }
+
+.steps p {
+  margin-top: 0.375rem;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+footer {
+  position: relative;
+  padding: 2.5rem 1.25rem 8rem;
+}
+
+@media (min-width: 640px) { footer { padding-inline: 2rem; } }
+
+footer .rule-facet { margin-bottom: 2.25rem; }
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.footer-contact {
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-contact a,
+.footer-links a { transition: color 0.2s ease; }
+
+.footer-contact a:hover,
+.footer-links a:hover { color: var(--amber); }
+
+.footer-links {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.copyright {
+  margin-top: 2rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   Sticky CTA — appears past the hero, hides while the booking section is
+   on screen (no point competing with the real CTA)
+   -------------------------------------------------------------------------- */
+
+.sticky-cta {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 50;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(7, 4, 26, 0.8);
+  padding: 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.sticky-cta.visible { transform: translateY(0); }
+
+.sticky-cta .btn-primary {
+  margin-inline: auto;
+  max-width: 32rem;
+}
+
+/* --------------------------------------------------------------------------
+   Legal pages (privacy / terms)
+   -------------------------------------------------------------------------- */
+
+.legal { padding: 4rem 1.25rem; }
+
+@media (min-width: 640px) { .legal { padding-inline: 2rem; } }
+
+.back-link {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.legal h1 { margin-top: 1.5rem; font-size: 1.875rem; letter-spacing: -0.045em; }
+
+.legal .updated {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.legal .body {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1.5rem;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.legal h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.legal strong { color: #fff; }
+
+/* --------------------------------------------------------------------------
+   Animation
+   -------------------------------------------------------------------------- */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-1.5%, -1%, 0) scale(1.04); }
+}
+
+@keyframes ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+.fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Respect users who get motion sick */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .fade-up,
+  .backdrop img,
+  .dot::before { animation: none !important; }
+  .fade-up { opacity: 1; transform: none; }
+}

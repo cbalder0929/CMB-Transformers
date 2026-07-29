@@ -48,32 +48,15 @@ You'll fill `.env.local` in as you go.
 2. Open `booking-site/supabase/schema.sql`, copy the whole file, paste it in
 3. Click **Run**
 
-You should see "Success. No rows returned." Check **Table Editor** — four
-tables: `availability_rules`, `blackout_dates`, `bookings`, `message_log`.
+You should see "Success. No rows returned." Check **Table Editor** for the
+`bookings` and `message_log` tables.
 
-`availability_rules` will already have 10 rows of placeholder hours.
+### A3. Business hours
 
-### A3. Set your real training hours
-
-Those seeded hours are a guess. Fix them now — this is what the site offers
-people.
-
-**Table Editor → `availability_rules`.** Edit rows directly, or run SQL:
-
-```sql
--- Wipe the placeholders and put in your real windows.
--- day_of_week: 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
--- Times are Central wall-clock, 24-hour.
-delete from availability_rules;
-
-insert into availability_rules (day_of_week, start_time, end_time, slot_minutes) values
-  (1, '17:00', '20:00', 60),   -- Monday evenings
-  (3, '17:00', '20:00', 60),   -- Wednesday evenings
-  (6, '09:00', '12:00', 60);   -- Saturday mornings
-```
-
-Rules can overlap and you can have several per day — a morning window and an
-evening window is two rows, same `day_of_week`.
+Weekly hours are maintained in `lib/config.ts`, not Supabase. The current
+schedule is 7 AM–6 PM Sunday, Friday, and Saturday, and 7 AM–9 PM Monday
+through Thursday (America/Chicago). Google Calendar removes conflicts from
+those windows.
 
 ### A4. Copy the keys
 
@@ -123,7 +106,7 @@ without it the site will happily book you during your dentist appointment.
 **APIs & Services → OAuth consent screen.**
 
 1. User Type: **External** → Create
-2. App name: `CMB Transformations Booking`
+2. App name: `CMB Bookings`
    User support email: your email
    Developer contact: your email
    → Save and Continue
@@ -164,7 +147,7 @@ npm run google-token
 
 It asks for the client ID and secret, opens your browser, and you authorise it.
 On the "Google hasn't verified this app" screen: **Advanced → Go to CMB
-Transformations Booking (unsafe)**. That warning is about *your own* app; it's
+Bookings (unsafe)**. That warning is about *your own* app; it's
 there because you haven't paid for Google's verification review, which you don't
 need for a single user.
 
@@ -180,22 +163,24 @@ Paste it into `.env.local`.
 > Revoke it at <https://myaccount.google.com/permissions> and run the script
 > again.
 
-### B5. Set the calendar
+### B5. Set the calendars
 
 ```
-GOOGLE_CALENDAR_ID=carlosbalderas135@gmail.com
+BOOKING_CALENDAR_ID=your-cmb-bookings-calendar-id@group.calendar.google.com
+SCHOOL_CALENDAR_ID=your-2026-fall-schedule-calendar-id@group.calendar.google.com
+WORK_CALENDAR_ID=your-xfinity-schedule-calendar-id@group.calendar.google.com
 ```
 
-That's your main calendar. If you'd rather keep client sessions on a separate
-calendar, create one in Google Calendar, then Settings → that calendar →
-**Integrate calendar** → copy the Calendar ID (a long `...@group.calendar.google.com`
-string) and use that instead.
+Create three calendars: **CMB Bookings** (website appointments), **2026 Fall
+Schedule** (classes), and **XFINITY Schedule** (work shifts). Copy each Calendar ID from Google Calendar Settings. Only `BOOKING_CALENDAR_ID` receives website-created events; the other two block availability. You can later add `PERSONAL_CALENDAR_ID` for personal events.
+
+Calendar IDs use the calendar's **Integrate calendar** value, not its display name.
 
 ### B6. Test it
 
 Restart `npm run dev`. Then:
 
-1. Put a fake event on your Google Calendar during one of your bookable hours
+1. Put a fake event on the school or work calendar during one of your bookable hours
 2. Reload the booking page — **that slot should be gone**
 3. Book a different slot from the site
 4. Check Google Calendar — the event is there, titled "Free session — [name]"
@@ -219,7 +204,9 @@ Vercel doesn't read `.env.local`. You have to add the variables by hand.
    GOOGLE_CLIENT_ID
    GOOGLE_CLIENT_SECRET
    GOOGLE_REFRESH_TOKEN
-   GOOGLE_CALENDAR_ID
+   BOOKING_CALENDAR_ID
+   SCHOOL_CALENDAR_ID
+   WORK_CALENDAR_ID
    BUSINESS_TIMEZONE
    NEXT_PUBLIC_SITE_URL
    ```
@@ -257,15 +244,10 @@ Test from a phone that isn't yours, on cell data rather than your wifi:
 
 ## Things you'll want to do later
 
-**Block a vacation** — SQL Editor:
+**Block a vacation** — add an all-day event to a configured Google Calendar.
 
-```sql
-insert into blackout_dates (starts_at, ends_at, reason)
-values ('2026-08-10 00:00-05', '2026-08-17 00:00-05', 'vacation');
-```
-
-**Change the booking buffer** — `lib/config.ts`, the `booking` object:
-`minNoticeHours` (default 4) and `maxDaysAhead` (default 14).
+**Change business hours or booking rules** — `lib/config.ts`. Edit
+`availabilityRules`, `minNoticeHours` (default 4), or `maxDaysAhead` (default 14).
 
 **See what's coming up**:
 

@@ -8,6 +8,7 @@ import { bookingSchema } from "@/lib/validation";
 import { toE164 } from "@/lib/phone";
 import { isSupabaseConfigured } from "@/lib/env";
 import { createCalendarEvent } from "@/lib/google-calendar";
+import { sendConfirmationEmail } from "@/lib/notifications";
 import { business } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
@@ -162,7 +163,16 @@ export async function POST(request: Request) {
     console.error("[api/bookings] calendar sync failed for", inserted.id, err);
   }
 
-  // Layer 5/6 hook: confirmation email + SMS go here.
+  // --- Confirmation email ---------------------------------------------------
+  // Same rule as the calendar: best-effort, never fails the POST. sendConfirmationEmail
+  // resolves on failure and records why in message_log.
+  //
+  // Awaited rather than fired-and-forgotten: on Vercel the serverless function
+  // is frozen the moment the response is returned, so a dangling promise here
+  // would be killed mid-flight and the email would silently never arrive.
+  await sendConfirmationEmail(inserted);
+
+  // Layer 6 hook: confirmation SMS goes here.
 
   return NextResponse.json({
     ok: true,

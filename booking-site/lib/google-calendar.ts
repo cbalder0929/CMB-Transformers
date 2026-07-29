@@ -1,4 +1,4 @@
-import { env, isGoogleConfigured } from "./env";
+import { availabilityCalendarIds, env, isGoogleConfigured } from "./env";
 import type { Interval } from "./availability";
 
 /**
@@ -58,6 +58,7 @@ export async function getBusyIntervals(from: Date, to: Date): Promise<Interval[]
   if (!isGoogleConfigured()) return [];
 
   const token = await getAccessToken();
+  const calendarIds = availabilityCalendarIds();
   const res = await fetch(`${CAL_BASE}/freeBusy`, {
     method: "POST",
     headers: {
@@ -67,7 +68,7 @@ export async function getBusyIntervals(from: Date, to: Date): Promise<Interval[]
     body: JSON.stringify({
       timeMin: from.toISOString(),
       timeMax: to.toISOString(),
-      items: [{ id: env.google.calendarId }],
+      items: calendarIds.map((id) => ({ id })),
     }),
     cache: "no-store",
   });
@@ -80,15 +81,39 @@ export async function getBusyIntervals(from: Date, to: Date): Promise<Interval[]
     calendars: Record<string, { busy?: { start: string; end: string }[]; errors?: unknown[] }>;
   };
 
-  const cal = json.calendars?.[env.google.calendarId];
-  if (cal?.errors?.length) {
-    throw new Error(`freeBusy calendar error: ${JSON.stringify(cal.errors)}`);
+  const busy: Interval[] = [];
+  for (const calendarId of calendarIds) {
+    const calendar = json.calendars?.[calendarId];
+    if (calendar?.errors?.length) {
+      throw new Error(
+        `freeBusy calendar error for ${calendarId}: ${JSON.stringify(calendar.errors)}`,
+      );
+    }
+    busy.push(
+      ...(calendar?.busy ?? []).map((block) => ({
+        start: new Date(block.start),
+        end: new Date(block.end),
+      })),
+    );
   }
 
-  return (cal?.busy ?? []).map((b) => ({
-    start: new Date(b.start),
-    end: new Date(b.end),
-  }));
+  return mergeIntervals(busy);
+}
+
+/** Combine all calendar conflicts into one ordered availability block list. */
+function mergeIntervals(intervals: Interval[]): Interval[] {
+  const ordered = [...intervals].sort((a, b) => a.start.getTime() - b.start.getTime());
+  const merged: Interval[] = [];
+
+  for (const interval of ordered) {
+    const previous = merged.at(-1);
+    if (previous && interval.start < previous.end) {
+      if (interval.end > previous.end) previous.end = interval.end;
+    } else {
+      merged.push({ ...interval });
+    }
+  }
+  return merged;
 }
 
 export type CalendarEventInput = {
@@ -108,7 +133,7 @@ export async function createCalendarEvent(
   if (!isGoogleConfigured()) return null;
 
   const token = await getAccessToken();
-  const calId = encodeURIComponent(env.google.calendarId);
+  const calId = encodeURIComponent(env.google.bookingCalendarId);
 
   const res = await fetch(
     // sendUpdates=all emails the prospect a real calendar invite from Google.
@@ -154,7 +179,7 @@ export async function deleteCalendarEvent(eventId: string): Promise<void> {
   if (!isGoogleConfigured()) return;
 
   const token = await getAccessToken();
-  const calId = encodeURIComponent(env.google.calendarId);
+  const calId = encodeURIComponent(env.google.bookingCalendarId);
 
   const res = await fetch(
     `${CAL_BASE}/calendars/${calId}/events/${encodeURIComponent(eventId)}?sendUpdates=all`,

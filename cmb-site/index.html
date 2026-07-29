@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<title>CMB Bookings — Free Personal Training Session</title>
+<meta name="description" content="Book a free 60-minute onboarding session with Charles. No commitment, no pressure — just one hour to see if we're a good fit.">
+<meta name="theme-color" content="#07041A">
+
+<!-- Open Graph (what shows when someone texts or DMs the link) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="CMB Bookings — Free Personal Training Session">
+<meta property="og:description" content="Book a free 60-minute onboarding session. No commitment, no pressure.">
+<meta property="og:image" content="bg.jpg">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Warm up the connection to Google's scheduler so the embed paints sooner -->
+<link rel="preconnect" href="https://calendar.google.com">
+
+<!-- Google's scheduling-button script. We don't show Google's button — we load
+     it into a hidden host and let our own buttons trigger it, so "Book my free
+     session" opens the scheduler in Google's overlay instead of just scrolling.
+     If this script is blocked, the buttons fall back to scrolling to #book. -->
+<link href="https://calendar.google.com/calendar/scheduling-button-script.css" rel="stylesheet">
+<script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ==========================================================================
+     Backdrop — the low-poly artwork, fixed, slowly drifting
+     ========================================================================== -->
+<div class="backdrop" aria-hidden="true">
+  <img src="bg.jpg" alt="">
+</div>
+
+<main>
+
+  <!-- ======================================================================
+       Hero
+       ====================================================================== -->
+  <section class="hero">
+    <div class="wrap">
+
+      <div class="wordmark fade-up">
+        <!-- Small triangulated mark that echoes the background artwork -->
+        <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+          <defs>
+            <linearGradient id="fm-a" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0%" stop-color="#F56A29"/><stop offset="100%" stop-color="#EDA149"/>
+            </linearGradient>
+            <linearGradient id="fm-b" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0%" stop-color="#A41B47"/><stop offset="100%" stop-color="#6E2576"/>
+            </linearGradient>
+            <linearGradient id="fm-c" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0%" stop-color="#6098D3"/><stop offset="100%" stop-color="#7AF0E4"/>
+            </linearGradient>
+          </defs>
+          <path d="M2 30 L16 2 L18 30 Z" fill="url(#fm-a)"/>
+          <path d="M16 2 L30 30 L18 30 Z" fill="url(#fm-b)"/>
+          <path d="M16 2 L30 30 L26 12 Z" fill="url(#fm-c)" opacity="0.9"/>
+        </svg>
+        <span>CMB</span>
+      </div>
+
+      <div class="pill fade-up" style="animation-delay:60ms">
+        <span class="dot"></span>
+        Now booking new clients
+      </div>
+
+      <h1 class="fade-up" style="animation-delay:120ms">
+        Your first<br>session is<br><em>free.</em>
+      </h1>
+
+      <p class="fade-up" style="animation-delay:180ms">
+        No commitment. No pressure. Just one hour to see if we&rsquo;re a good fit.
+      </p>
+
+      <p class="fade-up" style="animation-delay:210ms">
+        You&rsquo;ll leave knowing exactly where you stand and what to do next —
+        whether you keep training with Charles or not.
+      </p>
+
+      <div class="hero-cta fade-up" style="animation-delay:240ms">
+        <a href="#book" class="btn-primary" data-book>Book my free session</a>
+        <p class="note">Takes about 30 seconds · Pick any open time</p>
+      </div>
+
+      <!-- Stat strip — structure, and it earns trust before the ask -->
+      <dl class="stats fade-up" style="animation-delay:300ms">
+        <div><dt>60</dt><dd>minutes</dd></div>
+        <div><dt>$0</dt><dd>to start</dd></div>
+        <div><dt>1:1</dt><dd>coaching</dd></div>
+      </dl>
+
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Booking — Google Calendar appointment scheduler.
+       Google owns the whole flow from here: the slot list, the intake
+       questions, the confirmation email, and writing the event to your
+       calendar. Nothing to host, nothing to keep in sync.
+
+       To swap in a different schedule, replace the iframe src below with the
+       embed code from Google Calendar → your appointment schedule → Share →
+       Embed. Nothing else on the page needs to change.
+       ====================================================================== -->
+  <section id="book">
+    <div class="book-glow" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="section-label"><span>Pick a time</span></div>
+
+      <h2 class="section-h2">
+        When works<br><span class="text-facet">for you?</span>
+      </h2>
+
+      <div class="glass booking-panel" id="scheduler">
+        <div class="scheduler-card">
+          <!-- Google Calendar Appointment Scheduling begin -->
+          <iframe
+            src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3sYwHFJ_J2mGPpCmLZSNJIO3Y48M2EE3NbNODIniJDtrxcSgP13_UfD2mKeNfNMBsycvbI1bvW?gv=true"
+            title="Book a free session with Charles"
+            width="100%" height="760" frameborder="0" style="border:0"
+            loading="lazy"></iframe>
+          <!-- end Google Calendar Appointment Scheduling -->
+        </div>
+
+        <!-- Only shown if a privacy blocker or strict browser kills the iframe -->
+        <div class="scheduler-fallback">
+          <p>The scheduler couldn&rsquo;t load in your browser — a privacy setting or
+             extension is likely blocking it.</p>
+          <a class="btn-primary"
+             href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3sYwHFJ_J2mGPpCmLZSNJIO3Y48M2EE3NbNODIniJDtrxcSgP13_UfD2mKeNfNMBsycvbI1bvW"
+             target="_blank" rel="noopener">Open the scheduler in a new tab</a>
+        </div>
+      </div>
+
+      <div class="booking-meta">
+        <span class="chip">Free</span>
+        <span class="chip">60 minutes</span>
+        <span class="chip">Instant confirmation</span>
+      </div>
+
+      <p class="booking-note">
+        Sessions are held at Your Gym Name · Chicago, IL 60601
+      </p>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       About
+       ====================================================================== -->
+  <section>
+    <div class="wrap">
+      <div class="section-label"><span>Who you train with</span></div>
+
+      <div class="glass-dark about-card">
+        <!-- Replace this block with a real photo:
+             <img src="charles.jpg" alt="Charles" width="800" height="600"> -->
+        <div class="about-photo"><span>Your photo here</span></div>
+
+        <div class="about-body">
+          <h3>Charles</h3>
+          <p class="role">Personal Trainer · Chicago, IL 60601</p>
+          <p>
+            I don&rsquo;t just want to train you — I want to teach you how to train
+            yourself. Everything I coach is built around the lessons that helped me
+            stop quitting, stay disciplined, and make fitness part of my life.
+          </p>
+        </div>
+      </div>
+
+      <div class="glass-dark philosophy">
+        <h4>My philosophy</h4>
+        <p>
+          My goal isn&rsquo;t for you to depend on me forever. My goal is for you to
+          understand why you&rsquo;re doing what you&rsquo;re doing, so you can build
+          habits that last long after our sessions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       FAQ
+       ====================================================================== -->
+  <section>
+    <div class="wrap">
+      <div class="section-label"><span>Questions</span></div>
+
+      <div class="glass-dark faq">
+        <details>
+          <summary>Is it actually free?<span class="plus" aria-hidden="true">+</span></summary>
+          <p>Yes. No card, no deposit, no catch. I&rsquo;d rather you feel how I coach
+             before you decide to pay for it.</p>
+        </details>
+        <details>
+          <summary>What if I&rsquo;ve never worked out before?<span class="plus" aria-hidden="true">+</span></summary>
+          <p>That&rsquo;s most people who book this. We start where you are. Nothing
+             about the session assumes experience.</p>
+        </details>
+        <details>
+          <summary>What should I bring?<span class="plus" aria-hidden="true">+</span></summary>
+          <p>Comfortable clothes, athletic shoes, and water. That&rsquo;s it.</p>
+        </details>
+        <details>
+          <summary>What if I need to reschedule?<span class="plus" aria-hidden="true">+</span></summary>
+          <p>Your Google confirmation email has reschedule and cancel links built in.
+             Use them any time — no awkward conversation required.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Why it's free
+       ====================================================================== -->
+  <section>
+    <div class="wrap">
+      <div class="section-label"><span>Why it&rsquo;s free</span></div>
+
+      <h2 class="section-h2">
+        No sales pitch.<br><span class="text-facet">Just an honest look.</span>
+      </h2>
+
+      <div class="glass-dark prose-card">
+        <p>
+          I don&rsquo;t believe personal training should start with a sales pitch. The
+          first session is free because I want us to figure out two things:
+        </p>
+
+        <ul class="check-list">
+          <li>Can I genuinely help you reach your goals?</li>
+          <li>Do we work well together?</li>
+        </ul>
+
+        <p class="after">
+          If the answer is yes, great — we&rsquo;ll build a plan. If not, you&rsquo;ll
+          still leave with a better understanding of your fitness.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       What's in the session
+       ====================================================================== -->
+  <section>
+    <div class="wrap">
+      <div class="section-label"><span>What happens in your first session</span></div>
+
+      <h2 class="section-h2">
+        One hour.<br><span class="text-facet">Three steps.</span>
+      </h2>
+
+      <ol class="steps">
+        <li class="glass-dark">
+          <div class="row">
+            <span class="num">1</span>
+            <div>
+              <h3>We get to know each other</h3>
+              <p>We&rsquo;ll spend time talking about your goals, what&rsquo;s held you
+                 back in the past, and what success actually looks like for you. No
+                 judgment. Just an honest conversation.</p>
+            </div>
+          </div>
+        </li>
+        <li class="glass-dark">
+          <div class="row">
+            <span class="num">2</span>
+            <div>
+              <h3>We train</h3>
+              <p>This isn&rsquo;t a consultation where we just sit and talk. You&rsquo;ll
+                 get a real workout so I can see how you move, coach you through
+                 exercises, and give you immediate feedback.</p>
+            </div>
+          </div>
+        </li>
+        <li class="glass-dark">
+          <div class="row">
+            <span class="num">3</span>
+            <div>
+              <h3>We build your roadmap</h3>
+              <p>At the end of the session, I&rsquo;ll explain exactly what I think you
+                 should focus on first and how I&rsquo;d approach your training. Even if
+                 you decide not to continue, you&rsquo;ll leave with direction instead of
+                 more confusion.</p>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Footer
+       ====================================================================== -->
+  <footer>
+    <div class="wrap">
+      <div class="rule-facet"></div>
+
+      <div class="footer-brand">
+        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
+          <path d="M2 30 L16 2 L18 30 Z" fill="url(#fm-a)"/>
+          <path d="M16 2 L30 30 L18 30 Z" fill="url(#fm-b)"/>
+          <path d="M16 2 L30 30 L26 12 Z" fill="url(#fm-c)" opacity="0.9"/>
+        </svg>
+        <span>CMB Bookings</span>
+      </div>
+
+      <div class="footer-contact">
+        <p><a href="https://maps.google.com/?q=123+Main+St+Chicago+IL">123 Main St, Chicago, IL 60601</a></p>
+        <p><a href="tel:+14042475627">(404) 247-5627</a></p>
+        <p><a href="mailto:hello@cmbbookings.com">hello@cmbbookings.com</a></p>
+      </div>
+
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+
+      <p class="copyright">© <span id="year">2026</span> CMB Bookings. All rights reserved.</p>
+    </div>
+  </footer>
+
+</main>
+
+<!-- Sticky CTA — appears past the hero, hides while booking is on screen -->
+<div class="sticky-cta" id="stickyCta">
+  <a href="#book" class="btn-primary" data-book>Book my free session</a>
+</div>
+
+<!-- Google renders its own orange button in here. We keep it offscreen and
+     click it programmatically from our buttons. -->
+<div id="gcalHost" aria-hidden="true"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Current year in the footer, so it never goes stale */
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ----------------------------------------------------------------------
+     Sticky CTA: show once past the hero, hide whenever the booking section
+     is on screen — no point competing with the real CTA.
+     ---------------------------------------------------------------------- */
+  var cta = document.getElementById("stickyCta");
+  var book = document.getElementById("book");
+  var ticking = false;
+
+  function update() {
+    var pastHero = window.scrollY > 420;
+    var rect = book.getBoundingClientRect();
+    var bookingInView = rect.top < window.innerHeight && rect.bottom > 0;
+    cta.classList.toggle("visible", pastHero && !bookingInView);
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      window.requestAnimationFrame(update);
+    }
+  }
+
+  update();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+
+  /* ----------------------------------------------------------------------
+     Scheduler fallback: some privacy extensions and strict browser settings
+     block third-party iframes outright. If the frame never fires `load`,
+     swap in a plain link to the same scheduler so nobody hits a dead end.
+
+     The iframe is lazy-loaded, so the timer only starts once the panel is
+     actually near the viewport — otherwise we'd flag a frame that simply
+     hasn't been asked to load yet.
+     ---------------------------------------------------------------------- */
+  var panel = document.getElementById("scheduler");
+  var frame = panel.querySelector("iframe");
+  var loaded = false;
+  var watching = false;
+
+  frame.addEventListener("load", function () { loaded = true; });
+
+  function watchForBlock() {
+    if (watching) return;
+    watching = true;
+    setTimeout(function () {
+      if (!loaded) panel.classList.add("is-blocked");
+    }, 8000);
+  }
+
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        watchForBlock();
+        io.disconnect();
+      }
+    }, { rootMargin: "600px" });
+    io.observe(panel);
+  } else {
+    watchForBlock();
+  }
+
+  /* ----------------------------------------------------------------------
+     Google's scheduling overlay, wired to our own buttons.
+
+     Google's script only knows how to render its own orange button, so we
+     let it do that inside an offscreen host and forward clicks to it. The
+     visitor gets Google's booking overlay without leaving the page — and
+     without a second button in the wrong color sitting on the layout.
+
+     Every step degrades: if the script is blocked, `calendar` never appears,
+     nothing is wired, and the buttons keep their plain `href="#book"`
+     behavior — scrolling to the inline embed below.
+     ---------------------------------------------------------------------- */
+  var SCHEDULE_URL =
+    "https://calendar.google.com/calendar/appointments/schedules/AcZssZ3sYwHFJ_J2mGPpCmLZSNJIO3Y48M2EE3NbNODIniJDtrxcSgP13_UfD2mKeNfNMBsycvbI1bvW?gv=true";
+
+  window.addEventListener("load", function () {
+    if (typeof calendar === "undefined" ||
+        !calendar.schedulingButton ||
+        typeof calendar.schedulingButton.load !== "function") {
+      return;
+    }
+
+    var host = document.getElementById("gcalHost");
+
+    try {
+      calendar.schedulingButton.load({
+        url: SCHEDULE_URL,
+        color: "#F56A29",          /* --flame, in case it ever shows */
+        label: "Book an appointment",
+        target: host
+      });
+    } catch (e) {
+      return;
+    }
+
+    /* Google injects its button asynchronously — poll briefly for it. */
+    var tries = 0;
+    var poll = setInterval(function () {
+      var gbtn = host.querySelector("button, a, [role='button']");
+      if (gbtn) {
+        clearInterval(poll);
+        document.querySelectorAll("[data-book]").forEach(function (el) {
+          el.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            gbtn.click();
+          });
+        });
+      } else if (++tries > 40) {
+        clearInterval(poll);   /* never showed up — leave the anchors alone */
+      }
+    }, 150);
+  });
+})();
+</script>
+
+</body>
+</html>

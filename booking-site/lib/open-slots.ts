@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getServiceClient, type AvailabilityRule, type BlackoutDate } from "./supabase";
+import { getServiceClient } from "./supabase";
 import { getBusyIntervals } from "./google-calendar";
 import { isGoogleConfigured } from "./env";
 import {
@@ -11,7 +11,7 @@ import {
   type DayOfSlots,
   type Interval,
 } from "./availability";
-import { booking as bookingConfig } from "./config";
+import { availabilityRules, booking as bookingConfig } from "./config";
 
 /**
  * The one function that decides what is bookable.
@@ -47,34 +47,20 @@ export async function getOpenSlots(opts?: {
 
   const supabase = getServiceClient();
 
-  // --- 1. The rules, and everything already spoken for -----------------------
-  const [rulesRes, blackoutsRes, bookingsRes] = await Promise.all([
-    supabase.from("availability_rules").select("*").eq("active", true),
-    supabase
-      .from("blackout_dates")
-      .select("*")
-      .lt("starts_at", rangeEnd.toISOString())
-      .gt("ends_at", rangeStart.toISOString()),
-    supabase
-      .from("bookings")
-      .select("starts_at, ends_at")
-      .in("status", ["booked", "confirmed"])
-      .gte("starts_at", rangeStart.toISOString())
-      .lte("starts_at", rangeEnd.toISOString()),
-  ]);
+  // --- 1. Website bookings ---------------------------------------------------
+  // Weekly hours live in lib/config.ts. Supabase is only the concurrency-safe
+  // booking record, not an availability-rules system.
+  const { data: bookingRows, error: bookingsError } = await supabase
+    .from("bookings")
+    .select("starts_at, ends_at")
+    .in("status", ["booked", "confirmed"])
+    .gte("starts_at", rangeStart.toISOString())
+    .lte("starts_at", rangeEnd.toISOString());
 
-  if (rulesRes.error) throw new Error(`availability_rules: ${rulesRes.error.message}`);
-  if (blackoutsRes.error) throw new Error(`blackout_dates: ${blackoutsRes.error.message}`);
-  if (bookingsRes.error) throw new Error(`bookings: ${bookingsRes.error.message}`);
-
-  const rules = (rulesRes.data ?? []) as AvailabilityRule[];
+  if (bookingsError) throw new Error(`bookings: ${bookingsError.message}`);
 
   const busy: Interval[] = [
-    ...((blackoutsRes.data ?? []) as BlackoutDate[]).map((b) => ({
-      start: new Date(b.starts_at),
-      end: new Date(b.ends_at),
-    })),
-    ...((bookingsRes.data ?? []) as { starts_at: string; ends_at: string }[]).map((b) => ({
+    ...((bookingRows ?? []) as { starts_at: string; ends_at: string }[]).map((b) => ({
       start: new Date(b.starts_at),
       end: new Date(b.ends_at),
     })),
@@ -86,18 +72,16 @@ export async function getOpenSlots(opts?: {
   // and report calendarChecked: false so the problem is visible.
   let calendarChecked = false;
   if (isGoogleConfigured()) {
-    try {
-      const googleBusy = await getBusyIntervals(rangeStart, rangeEnd);
-      busy.push(...googleBusy);
-      calendarChecked = true;
-    } catch (err) {
-      console.error("[availability] Google freeBusy failed, continuing without it:", err);
-    }
+    // Google is the source of truth for outside commitments. Fail closed if
+    // FreeBusy cannot be read; a potentially occupied slot must not be shown.
+    const googleBusy = await getBusyIntervals(rangeStart, rangeEnd);
+    busy.push(...googleBusy);
+    calendarChecked = true;
   }
 
   // --- 3. Generate, then subtract -------------------------------------------
   const all = generateSlots({
-    rules,
+    rules: [...availabilityRules],
     dates,
     timezone,
     now,

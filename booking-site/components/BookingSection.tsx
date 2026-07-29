@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { SectionLabel } from "./Includes";
 import DatePicker from "./DatePicker";
 import TimeSlots from "./TimeSlots";
 import BookingForm, { type BookingSuccess } from "./BookingForm";
@@ -98,32 +97,27 @@ export default function BookingSection() {
   }
 
   return (
-    <section id="book" className="relative scroll-mt-4 px-5 py-16 sm:px-8">
+    <section id="book" className="relative scroll-mt-4 px-5 pb-16 pt-4 sm:px-8">
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-flame/25 blur-[130px]"
       />
 
       <div className="mx-auto max-w-lg">
-        <SectionLabel>{booked ? "You're booked" : "Pick a time"}</SectionLabel>
+        {!booked && (
+          <p
+            className="animate-fade-up text-center text-sm text-white/60"
+            style={{ animationDelay: "180ms" }}
+          >
+            <span className="font-semibold text-white">60 min</span>
+            {" · "}
+            <span className="font-semibold text-white">$0</span>
+            {" · "}
+            <span className="font-semibold text-white">1:1 workout</span>
+          </p>
+        )}
 
-        <h2 className="mt-3 text-3xl font-bold leading-[1.1] tracking-tightest sm:text-4xl">
-          {booked ? (
-            <>
-              See you
-              <br />
-              <span className="text-facet">soon.</span>
-            </>
-          ) : (
-            <>
-              When works
-              <br />
-              <span className="text-facet">for you?</span>
-            </>
-          )}
-        </h2>
-
-        <div className="mt-8">
+        <div className={booked ? "" : "mt-3 animate-fade-up"} style={booked ? undefined : { animationDelay: "220ms" }}>
           {booked ? (
             <SuccessScreen booking={booked} />
           ) : (
@@ -200,15 +194,38 @@ export default function BookingSection() {
                       />
                     </div>
                   ) : (
-                    <p className="border-t border-white/10 pt-5 text-center text-sm text-white/40">
-                      Pick a time and the rest takes 30 seconds.
-                    </p>
+                    <div className="border-t border-white/10 pt-6">
+                      <button
+                        type="button"
+                        disabled
+                        className="btn-primary w-full cursor-not-allowed opacity-40"
+                      >
+                        Book my free session
+                      </button>
+                    </div>
                   )}
                 </div>
               )}
             </div>
           )}
         </div>
+
+        {!booked && (
+          <dl className="mt-8 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md">
+            {[
+              { v: "60", l: "minutes" },
+              { v: "$0", l: "to start" },
+              { v: "1:1", l: "coaching" },
+            ].map((s) => (
+              <div key={s.l} className="bg-white/[0.04] px-3 py-4 text-center">
+                <dt className="text-2xl font-bold tracking-tight">{s.v}</dt>
+                <dd className="mt-0.5 text-[11px] uppercase tracking-widest text-white/60">
+                  {s.l}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )}
 
         {!booked && (
           <p className="mt-5 text-center text-sm text-white/50">

@@ -10,7 +10,7 @@ import {
   subtractBusy,
   withOpenSlots,
 } from "../availability";
-import type { AvailabilityRule } from "../supabase";
+import type { AvailabilityRule } from "../availability";
 
 const TZ = "America/Chicago";
 
@@ -20,7 +20,6 @@ const rule = (
   end: string,
   slot = 60,
 ): AvailabilityRule => ({
-  id: `${day}-${start}`,
   day_of_week: day,
   start_time: start,
   end_time: end,
