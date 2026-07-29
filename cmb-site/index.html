@@ -334,7 +334,7 @@
 
 </main>
 
-<!-- Sticky CTA — appears past the hero, hides while booking is on screen -->
+<!-- Sticky CTA — hidden until the user scrolls, hides while booking is on screen -->
 <div class="sticky-cta" id="stickyCta">
   <a href="#book" class="btn-primary" data-book>Book my free session</a>
 </div>
@@ -351,18 +351,21 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ----------------------------------------------------------------------
-     Sticky CTA: show once past the hero, hide whenever the booking section
+     Sticky CTA: hidden on load, appears once the user scrolls past a small
+     threshold, hides again near the top or whenever the booking section
      is on screen — no point competing with the real CTA.
      ---------------------------------------------------------------------- */
   var cta = document.getElementById("stickyCta");
   var book = document.getElementById("book");
   var ticking = false;
 
+  var SCROLL_THRESHOLD = 200;
+
   function update() {
-    var pastHero = window.scrollY > 420;
+    var pastThreshold = window.scrollY > SCROLL_THRESHOLD;
     var rect = book.getBoundingClientRect();
     var bookingInView = rect.top < window.innerHeight && rect.bottom > 0;
-    cta.classList.toggle("visible", pastHero && !bookingInView);
+    cta.classList.toggle("visible", pastThreshold && !bookingInView);
     ticking = false;
   }
 

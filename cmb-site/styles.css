@@ -48,6 +48,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -107,6 +108,7 @@ main { position: relative; min-height: 100vh; }
   inset: 0;
   z-index: -10;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .backdrop img {
