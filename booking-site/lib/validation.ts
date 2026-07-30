@@ -40,8 +40,6 @@ export const bookingSchema = z.object({
 
   notes: z.string().trim().max(1000, "Keep it under 1000 characters").optional(),
 
-  smsConsent: z.boolean(),
-
   /** UTC ISO instant of the chosen slot. */
   startsAt: z
     .string()

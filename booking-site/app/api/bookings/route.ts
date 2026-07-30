@@ -8,7 +8,7 @@ import { bookingSchema } from "@/lib/validation";
 import { toE164 } from "@/lib/phone";
 import { isSupabaseConfigured } from "@/lib/env";
 import { createCalendarEvent } from "@/lib/google-calendar";
-import { sendConfirmationEmail } from "@/lib/notifications";
+import { sendConfirmationEmail, sendAdminNotificationEmail } from "@/lib/notifications";
 import { business } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
@@ -88,9 +88,6 @@ export async function POST(request: Request) {
   }
 
   // --- Insert ---------------------------------------------------------------
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  const consentIp = forwardedFor?.split(",")[0]?.trim() ?? null;
-
   const { data: inserted, error: insertError } = await supabase
     .from("bookings")
     .insert({
@@ -101,11 +98,6 @@ export async function POST(request: Request) {
       goal: data.goal || null,
       experience_level: data.experienceLevel || null,
       notes: data.notes || null,
-      sms_consent: data.smsConsent,
-      // Only meaningful if they actually ticked the box. Storing an IP and
-      // timestamp for a non-consent would be worse than storing nothing.
-      consent_ip: data.smsConsent ? consentIp : null,
-      consent_at: data.smsConsent ? new Date().toISOString() : null,
       starts_at: data.startsAt,
       ends_at: slotEndsAt,
       timezone,
@@ -135,18 +127,7 @@ export async function POST(request: Request) {
   try {
     const eventId = await createCalendarEvent({
       summary: `Free session — ${inserted.first_name} ${inserted.last_name}`,
-      description: [
-        `${inserted.first_name} ${inserted.last_name}`,
-        `Phone: ${inserted.phone}`,
-        `Email: ${inserted.email}`,
-        inserted.goal ? `Goal: ${inserted.goal}` : null,
-        inserted.experience_level ? `Experience: ${inserted.experience_level}` : null,
-        inserted.notes ? `Notes: ${inserted.notes}` : null,
-        `SMS consent: ${inserted.sms_consent ? "yes" : "no"}`,
-      ]
-        .filter(Boolean)
-        .join("\n"),
-      location: `${business.location.name}, ${business.location.address}, ${business.location.cityState}`,
+      description: [`Phone: ${business.phone}`, `Email: ${business.email}`].join("\n"),
       startsAt: inserted.starts_at,
       endsAt: inserted.ends_at,
       timezone: inserted.timezone,
@@ -163,14 +144,16 @@ export async function POST(request: Request) {
     console.error("[api/bookings] calendar sync failed for", inserted.id, err);
   }
 
-  // --- Confirmation email ---------------------------------------------------
-  // Same rule as the calendar: best-effort, never fails the POST. sendConfirmationEmail
-  // resolves on failure and records why in message_log.
+  // --- Confirmation + admin notification emails ------------------------------
+  // Same rule as the calendar: best-effort, never fails the POST. Both resolve
+  // on failure and record why in message_log. Only reachable once the insert
+  // above has actually succeeded, so a failed booking never triggers either.
   //
   // Awaited rather than fired-and-forgotten: on Vercel the serverless function
   // is frozen the moment the response is returned, so a dangling promise here
   // would be killed mid-flight and the email would silently never arrive.
   await sendConfirmationEmail(inserted);
+  await sendAdminNotificationEmail(inserted);
 
   // Layer 6 hook: confirmation SMS goes here.
 

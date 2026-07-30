@@ -75,7 +75,7 @@ export function confirmationEmail(booking: Booking): Email {
   ].join("\n");
 
   return {
-    subject: `You're booked — ${dayLabel} at ${timeLabel}`,
+    subject: `CMB Bookings - Your Personal Training Session is Confirmed`,
     html: shell({
       preheader: `${dayLabel} at ${timeLabel} with ${business.trainerName}.`,
       body,

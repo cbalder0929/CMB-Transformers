@@ -93,6 +93,11 @@ export async function sendEmail(input: SendEmailInput): Promise<SendResult> {
 
 export type MessageKind =
   | "confirmation"
+  | "admin_notification"
+  | "reminder_24h_customer"
+  | "reminder_24h_admin"
+  | "reminder_1h_customer"
+  | "reminder_1h_admin"
   | "reminder_24h"
   | "reminder_2h"
   | "followup"

@@ -43,6 +43,7 @@ export const env = {
       (str(process.env.VERCEL_URL) ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"),
     timezone: str(process.env.BUSINESS_TIMEZONE) ?? "America/Chicago",
     trainerPhone: str(process.env.TRAINER_PHONE),
+    cronSecret: str(process.env.CRON_SECRET),
   },
 };
 

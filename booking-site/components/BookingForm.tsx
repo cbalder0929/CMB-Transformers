@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { bookingSchema, type BookingInput } from "@/lib/validation";
 import { formatAsYouType } from "@/lib/phone";
-import { business, goalOptions, experienceOptions } from "@/lib/config";
+import { goalOptions, experienceOptions } from "@/lib/config";
 
 const fieldBase =
   "w-full rounded-xl border border-white/12 bg-white/[0.06] px-4 py-3 text-white placeholder-white/35 outline-none transition focus:border-flame/60 focus:bg-white/[0.09]";
@@ -50,7 +50,6 @@ export default function BookingForm({
       goal: "",
       experienceLevel: "",
       notes: "",
-      smsConsent: false,
       startsAt,
       website: "",
     },
@@ -183,27 +182,6 @@ export default function BookingForm({
         aria-hidden
         className="absolute left-[-9999px] h-0 w-0 opacity-0"
       />
-
-      <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4">
-        <input
-          {...register("smsConsent")}
-          type="checkbox"
-          className="mt-0.5 h-5 w-5 shrink-0 rounded border-white/25 bg-white/10 accent-flame"
-        />
-        <span className="text-[13px] leading-relaxed text-white/60">
-          I agree to receive appointment reminders and confirmations by text message from{" "}
-          {business.name} at the number provided. Message frequency varies. Message and data
-          rates may apply. Reply STOP to opt out, HELP for help. See our{" "}
-          <a href="/privacy" className="underline decoration-white/30 underline-offset-2">
-            Privacy Policy
-          </a>{" "}
-          and{" "}
-          <a href="/terms" className="underline decoration-white/30 underline-offset-2">
-            Terms
-          </a>
-          .
-        </span>
-      </label>
 
       {errors.root?.message && (
         <p className="rounded-xl border border-ember/40 bg-ember/15 px-4 py-3 text-sm text-white">

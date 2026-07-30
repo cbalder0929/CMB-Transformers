@@ -57,6 +57,10 @@ export type Booking = {
   status: BookingStatus;
   google_event_id: string | null;
   action_token: string;
+  confirmation_sent_at: string | null;
+  admin_notified_at: string | null;
+  reminder_24h_sent_at: string | null;
+  reminder_1h_sent_at: string | null;
 };
 
 /** Postgres unique-violation. This is how a double-booking announces itself. */
