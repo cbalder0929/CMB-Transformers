@@ -17,14 +17,6 @@ export default function Footer() {
         <div className="mt-5 space-y-1.5 text-sm text-white/50">
           <p>
             <a
-              href={business.location.mapsUrl}
-              className="transition hover:text-amber"
-            >
-              {business.location.address}, {business.location.cityState}
-            </a>
-          </p>
-          <p>
-            <a
               href={`tel:${business.phoneE164}`}
               className="transition hover:text-amber"
             >

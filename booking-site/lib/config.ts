@@ -11,9 +11,9 @@ export const business = {
   phone: "(404) 247-5627",
   phoneE164: "+14042475627",
 
-  // TODO: replace with your real details before launch
-  email: "hello@cmbbookings.com",
+  email: "carlosbalderas135@gmail.com",
 
+  // TODO: replace with your real location details before launch
   location: {
     name: "Your Gym Name",
     address: "123 Main St",

@@ -227,11 +227,6 @@ export default function BookingSection() {
           </dl>
         )}
 
-        {!booked && (
-          <p className="mt-5 text-center text-sm text-white/50">
-            Sessions are held at {business.location.name} · {business.location.cityState}
-          </p>
-        )}
       </div>
     </section>
   );

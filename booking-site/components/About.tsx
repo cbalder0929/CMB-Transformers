@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { business } from "@/lib/config";
 import { SectionLabel } from "./Includes";
 
@@ -8,14 +9,15 @@ export default function About() {
         <SectionLabel>Who you train with</SectionLabel>
 
         <div className="glass-dark mt-7 overflow-hidden">
-          {/* Replace with a real photo:
-              <Image src="/charles.jpg" alt="Charles" width={800} height={600} priority /> */}
           <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 bg-facet-full opacity-25" />
-            <div className="absolute inset-0 bg-night-900/40" />
-            <span className="relative text-sm tracking-tight text-white/45">
-              Your photo here
-            </span>
+            <Image
+              src="/CMB-personalTraining-Headshot.png"
+              alt={`${business.trainerName}, personal trainer`}
+              fill
+              priority
+              sizes="(max-width: 640px) 100vw, 512px"
+              className="object-cover object-center"
+            />
           </div>
 
           <div className="p-6">
