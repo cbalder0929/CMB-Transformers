@@ -4,7 +4,7 @@ import { SectionLabel } from "./Includes";
 
 export default function About() {
   return (
-    <section className="relative px-5 py-16 sm:px-8">
+    <section id="trainer" className="relative px-5 py-16 sm:px-8">
       <div className="mx-auto max-w-lg">
         <SectionLabel>Who you train with</SectionLabel>
 
