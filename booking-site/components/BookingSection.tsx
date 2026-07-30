@@ -97,11 +97,7 @@ export default function BookingSection() {
   }
 
   return (
-    <section id="book" className="relative scroll-mt-4 overflow-x-hidden px-5 pb-16 pt-4 sm:px-8">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-flame/25 blur-[130px]"
-      />
+    <section id="book" className="relative bg-transparent scroll-mt-4 overflow-x-hidden px-5 pb-16 pt-4 sm:px-8">
 
       <div className="mx-auto max-w-lg">
         {!booked && (
